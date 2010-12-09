@@ -20,7 +20,7 @@ if !exists("g:loaded_fugitive")
     runtime plugin/fugitive.vim
 endif
 
-let loaded_statusline = 1
+let g:loaded_statusline = 1
 
 " Status bar
 "statusline setup

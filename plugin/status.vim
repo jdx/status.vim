@@ -1,3 +1,27 @@
+"============================================================================
+"File:        statusline.vim
+"Description: Status Line Plugin
+"Maintainer:  Jeff Dickey <dickeytk@gmail.com>
+"Version:     1.0.0
+"Last Change: 09 Dec, 2010
+"============================================================================
+
+if exists("g:loaded_statusline_plugin")
+    finish
+endif
+
+let g:loaded_statusline_plugin = 1
+
+if !exists("g:loaded_syntastic_plugin")
+    runtime plugin/syntastic.vim
+endif
+
+if !exists("g:loaded_fugitive")
+    runtime plugin/fugitive.vim
+endif
+
+let loaded_statusline = 1
+
 " Status bar
 "statusline setup
 set statusline=%f       "tail of the filename

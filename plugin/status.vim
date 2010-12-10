@@ -10,7 +10,7 @@
 let s:statusline_plugin = '1.0.0'
 
 " If already loaded do not load again.
-if exists("g:loaded_statusline_plugin")
+if exists("g:loaded_statusline_plugin") || &cp
     finish
 endif
 

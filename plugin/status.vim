@@ -6,21 +6,51 @@
 "Last Change: 09 Dec, 2010
 "============================================================================
 
+" Set Version
+let s:statusline_plugin = '1.0.0'
+
+" If already loaded do not load again.
 if exists("g:loaded_statusline_plugin")
     finish
 endif
 
 let g:loaded_statusline_plugin = 1
 
-if !exists("g:loaded_syntastic_plugin")
-    runtime plugin/syntastic.vim
+" FUNCTION: Sets User defaults if not defined.
+function! s:setVariable(var, value)
+    if !exists(a:var)
+        exec 'let ' . a:var . ' = ' . "'" . substitute(a:value, "'", "''", "g") . "'"
+        return 1
+    endif
+    return 0
+endfunction
+
+" Set User defaults if unset.
+call s:setVariable("g:statusline_fugitive", "1")
+call s:setVariable("g:statusline_syntastic", "1")
+
+" FUNCTION: Loads plugin if user has it enabled
+function s:loadPlugins(option_name, loaded_var, plugin)
+    if a:option_name && !exists(a:plugin)
+        exec 'runtime ' . a:plugin
+        return 1
+    endif
+    return 0
+endfunction
+
+" Load required plugins if user wants them.
+call s:loadPlugins(g:statusline_fugitive, "g:loaded_fugitive", "plugin/fugitive.vim")
+call s:loadPlugins(g:statusline_syntastic, "g:loaded_syntastic_plugin", "plugin/syntastic.vim")
+
+if g:statusline_fugitive && !exists('g:loaded_fugitive')
+    echoerr "Fugitive enabled but not installed. See README."
+    finish
 endif
 
-if !exists("g:loaded_fugitive")
-    runtime plugin/fugitive.vim
+if g:statusline_syntastic && !exists('g:loaded_syntastic_plugin')
+    echoerr "Syntastic enabled but not installed. See README."
+    finish
 endif
-
-let g:loaded_statusline = 1
 
 " Status bar
 "statusline setup
@@ -42,7 +72,9 @@ set statusline+=%r      "read only flag
 set statusline+=%m      "modified flag
 
 " display current git branch
-set statusline+=%{fugitive#statusline()}
+if g:statusline_fugitive
+    set statusline+=%{fugitive#statusline()}
+endif
 
 "display a warning if &et is wrong, or we have mixed-indenting
 set statusline+=%#error#
@@ -51,9 +83,11 @@ set statusline+=%*
 
 set statusline+=%{StatuslineTrailingSpaceWarning()}
 
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+if g:statusline_syntastic
+    set statusline+=%#warningmsg#
+    set statusline+=%{SyntasticStatuslineFlag()}
+    set statusline+=%*
+endif
 
 "display a warning if &paste is set
 set statusline+=%#error#

@@ -28,6 +28,8 @@ endfunction
 " Set User defaults if unset.
 call s:setVariable("g:statusline_fugitive", "1")
 call s:setVariable("g:statusline_syntastic", "1")
+call s:setVariable("g:statusline_rvm", "1")
+
 
 " FUNCTION: Loads plugin if user has it enabled
 function s:loadPlugins(option_name, loaded_var, plugin)
@@ -41,6 +43,7 @@ endfunction
 " Load required plugins if user wants them.
 call s:loadPlugins(g:statusline_fugitive, "g:loaded_fugitive", "plugin/fugitive.vim")
 call s:loadPlugins(g:statusline_syntastic, "g:loaded_syntastic_plugin", "plugin/syntastic.vim")
+call s:loadPlugins(g:statusline_rvm, "g:loaded_rvm", "plugin/rvm.vim")
 
 if g:statusline_fugitive && !exists('g:loaded_fugitive')
     echoerr "Fugitive enabled but not installed. See README."
@@ -49,6 +52,11 @@ endif
 
 if g:statusline_syntastic && !exists('g:loaded_syntastic_plugin')
     echoerr "Syntastic enabled but not installed. See README."
+    finish
+endif
+
+if g:statusline_rvm && !exists('g:loaded_rvm')
+    echoerr "RVM enabled but not installed. See README."
     finish
 endif
 
@@ -74,6 +82,11 @@ set statusline+=%m      "modified flag
 " display current git branch
 if g:statusline_fugitive
     set statusline+=%{fugitive#statusline()}
+endif
+
+" Display RVM 
+if g:statusline_rvm
+    set statusline+=%{rvm#statusline()}
 endif
 
 "display a warning if &et is wrong, or we have mixed-indenting

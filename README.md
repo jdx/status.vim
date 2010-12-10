@@ -22,12 +22,16 @@ Example:
 
     "Load Fugitive
     let g:statusline_fugitive = 1
+    "Load RVM
+    let g:statusline_rvm = 1
     "Do Not Load Syntastic
     let g:statusline_syntastic = 0
 
 
 * [Fugitive](https://github.com/tpope/vim-fugitive)
 * [Syntastic](https://github.com/scrooloose/syntastic)
+* [RVM](https://github.com/csexton/rvm.vim)
+
 
 Install
 ------

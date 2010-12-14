@@ -76,7 +76,6 @@ set statusline+=%*
 
 set statusline+=%h      "help file flag
 set statusline+=%y      "filetype
-set statusline+=%r      "read only flag
 set statusline+=%m      "modified flag
 
 " display current git branch

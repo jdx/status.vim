@@ -102,9 +102,10 @@ if g:statusline_syntastic
     set statusline+=%*
 endif
 
-"display a warning if &paste is set
+"display a warning if &paste or &ro is set
 set statusline+=%#error#
 set statusline+=%{&paste?'[paste]':''}
+set statusline+=%{&ro?'[ro]':''}
 set statusline+=%*
 
 set statusline+=%=      "left/right separator

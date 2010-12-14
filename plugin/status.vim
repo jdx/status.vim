@@ -29,7 +29,7 @@ endfunction
 call s:setVariable("g:statusline_fugitive", "1")
 call s:setVariable("g:statusline_syntastic", "1")
 call s:setVariable("g:statusline_rvm", "1")
-
+call s:setVariable("g:statusline_enabled", "1")
 
 " FUNCTION: Loads plugin if user has it enabled
 function s:loadPlugins(option_name, loaded_var, plugin)
@@ -60,59 +60,61 @@ if g:statusline_rvm && !exists('g:loaded_rvm')
     finish
 endif
 
-" Status bar
-"statusline setup
-set statusline=%f       "tail of the filename
+if g:statusline_enabled
+    " Status bar
+    "statusline setup
+    set statusline=%f       "tail of the filename
 
-"display a warning if fileformat isnt unix
-set statusline+=%#warningmsg#
-set statusline+=%{&ff!='unix'?'['.&ff.']':''}
-set statusline+=%*
-
-"display a warning if file encoding isnt utf-8
-set statusline+=%#warningmsg#
-set statusline+=%{(&fenc!='utf-8'&&&fenc!='')?'['.&fenc.']':''}
-set statusline+=%*
-
-set statusline+=%h      "help file flag
-set statusline+=%y      "filetype
-set statusline+=%m      "modified flag
-
-" display current git branch
-if g:statusline_fugitive
-    set statusline+=%{fugitive#statusline()}
-endif
-
-" Display RVM 
-if g:statusline_rvm
-    set statusline+=%{rvm#statusline()}
-endif
-
-"display a warning if &et is wrong, or we have mixed-indenting
-set statusline+=%#error#
-set statusline+=%{StatuslineTabWarning()}
-set statusline+=%*
-
-set statusline+=%{StatuslineTrailingSpaceWarning()}
-
-if g:statusline_syntastic
+    "display a warning if fileformat isnt unix
     set statusline+=%#warningmsg#
-    set statusline+=%{SyntasticStatuslineFlag()}
+    set statusline+=%{&ff!='unix'?'['.&ff.']':''}
     set statusline+=%*
+
+    "display a warning if file encoding isnt utf-8
+    set statusline+=%#warningmsg#
+    set statusline+=%{(&fenc!='utf-8'&&&fenc!='')?'['.&fenc.']':''}
+    set statusline+=%*
+
+    set statusline+=%h      "help file flag
+    set statusline+=%y      "filetype
+    set statusline+=%m      "modified flag
+
+    " display current git branch
+    if g:statusline_fugitive
+        set statusline+=%{fugitive#statusline()}
+    endif
+
+    " Display RVM 
+    if g:statusline_rvm
+        set statusline+=%{rvm#statusline()}
+    endif
+
+    "display a warning if &et is wrong, or we have mixed-indenting
+    set statusline+=%#error#
+    set statusline+=%{StatuslineTabWarning()}
+    set statusline+=%*
+
+    set statusline+=%{StatuslineTrailingSpaceWarning()}
+
+    if g:statusline_syntastic
+        set statusline+=%#warningmsg#
+        set statusline+=%{SyntasticStatuslineFlag()}
+        set statusline+=%*
+    endif
+
+    "display a warning if &paste or &ro is set
+    set statusline+=%#error#
+    set statusline+=%{&paste?'[paste]':''}
+    set statusline+=%{&ro?'[ro]':''}
+    set statusline+=%*
+
+    set statusline+=%=      "left/right separator
+    set statusline+=%{StatuslineCurrentHighlight()}\ \ "current highlight
+    set statusline+=%c,     "cursor column
+    set statusline+=%l/%L   "cursor line/total lines
+    set statusline+=\ %P    "percent through file
+    set laststatus=2        " Always show status line
 endif
-
-"display a warning if &paste or &ro is set
-set statusline+=%#error#
-set statusline+=%{&paste?'[paste]':''}
-set statusline+=%{&ro?'[ro]':''}
-set statusline+=%*
-
-set statusline+=%=      "left/right separator
-set statusline+=%{StatuslineCurrentHighlight()}\ \ "current highlight
-set statusline+=%c,     "cursor column
-set statusline+=%l/%L   "cursor line/total lines
-set statusline+=\ %P    "percent through file
-set laststatus=2        " Always show status line
 
 "return the syntax highlight group under the cursor ''
 function! StatuslineCurrentHighlight()

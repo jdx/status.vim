@@ -26,6 +26,8 @@ Example:
     let g:statusline_rvm = 1
     "Do Not Load Syntastic
     let g:statusline_syntastic = 0
+    "Turn statusline off
+    let g:statusline_enabled = 0
 
 
 * [Fugitive](https://github.com/tpope/vim-fugitive)

@@ -85,12 +85,12 @@ if g:statusline_enabled && has('statusline')
 
     " display current git branch
     if g:statusline_fugitive
-        set statusline+=%{fugitive#statusline()}
+        set statusline+=\ %{fugitive#statusline()}
     endif
 
     " Display RVM 
     if g:statusline_rvm
-        set statusline+=%{rvm#statusline()}
+        set statusline+=\ %{rvm#statusline()}
     endif
 
     "display a warning if &et is wrong, or we have mixed-indenting

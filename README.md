@@ -28,6 +28,8 @@ Example:
     let g:statusline_syntastic = 0
     "Turn statusline off
     let g:statusline_enabled = 0
+    "Turn on full paths
+    let g:statusline_fullpath = 1
 
 
 * [Fugitive](https://github.com/tpope/vim-fugitive)

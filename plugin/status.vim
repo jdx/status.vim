@@ -17,8 +17,8 @@ endif
 let g:loaded_statusline_plugin = 1
 
 " FUNCTION: Sets User defaults if not defined.
-function! s:setVariable(var, value)
-    if !exists(a:var)
+function! s:setVariable(var, value, force)
+    if !exists(a:var) || a:force
         exec 'let ' . a:var . ' = ' . "'" . substitute(a:value, "'", "''", "g") . "'"
         return 1
     endif
@@ -26,15 +26,15 @@ function! s:setVariable(var, value)
 endfunction
 
 " Set User defaults if unset.
-call s:setVariable("g:statusline_fugitive", "1")
-call s:setVariable("g:statusline_syntastic", "1")
-call s:setVariable("g:statusline_rvm", "1")
-call s:setVariable("g:statusline_fullpath", "0")
-call s:setVariable("g:statusline_enabled", "1")
+call s:setVariable("g:statusline_fugitive", "1", 0)
+call s:setVariable("g:statusline_syntastic", "1", 0)
+call s:setVariable("g:statusline_rvm", "1", 0)
+call s:setVariable("g:statusline_fullpath", "0", 0)
+call s:setVariable("g:statusline_enabled", "1", 0)
 
 " FUNCTION: Loads plugin if user has it enabled
 function s:loadPlugins(option_name, loaded_var, plugin)
-    if a:option_name && !exists(a:plugin)
+    if a:option_name && !exists(a:loaded_var)
         exec 'runtime ' . a:plugin
         return 1
     endif
@@ -47,18 +47,15 @@ call s:loadPlugins(g:statusline_syntastic, "g:loaded_syntastic_plugin", "plugin/
 call s:loadPlugins(g:statusline_rvm, "g:loaded_rvm", "plugin/rvm.vim")
 
 if g:statusline_fugitive && !exists('g:loaded_fugitive')
-    echoerr "Fugitive enabled but not installed. See README."
-    finish
+    call s:setVariable("g:statusline_fugitive", "0", 1)
 endif
 
 if g:statusline_syntastic && !exists('g:loaded_syntastic_plugin')
-    echoerr "Syntastic enabled but not installed. See README."
-    finish
+    call s:setVariable("g:statusline_syntastic_plugin", "0", 1)
 endif
 
 if g:statusline_rvm && !exists('g:loaded_rvm')
-    echoerr "RVM enabled but not installed. See README."
-    finish
+    call s:setVariable("g:statusline_rvm", "0", 1)
 endif
 
 if g:statusline_enabled && has('statusline')

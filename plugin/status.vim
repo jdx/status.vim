@@ -31,6 +31,28 @@ call s:setVariable("g:statusline_syntastic", "1")
 call s:setVariable("g:statusline_rvm", "1")
 call s:setVariable("g:statusline_fullpath", "0")
 call s:setVariable("g:statusline_enabled", "1")
+if !exists("g:statusline_order")
+    let g:statusline_order = [
+        \ 'Filename',
+        \ 'CheckUnix',
+        \ 'Encoding',
+        \ 'Help',
+        \ 'Filetype',
+        \ 'Modified',
+        \ 'Fugitive',
+        \ 'RVM',
+        \ 'TabWarning',
+        \ 'TrailingSpaceWarning',
+        \ 'Syntastic',
+        \ 'Paste',
+        \ 'ReadOnly',
+        \ 'RightSeperator',
+        \ 'CurrentHighlight',
+        \ 'CursorColumn',
+        \ 'LineAndTotal',
+        \ 'FilePercent']
+endif
+
 
 " FUNCTION: Loads plugin if user has it enabled
 function s:loadPlugins(option_name, loaded_var, plugin)
@@ -61,66 +83,112 @@ if g:statusline_rvm && !exists('g:loaded_rvm')
     finish
 endif
 
+" Give us something to work with.
+set statusline=
+
 if g:statusline_enabled && has('statusline')
-    " Status bar
-    if g:statusline_fullpath
-        set statusline=%F\  " Full Path
-    else
-        set statusline=%f\   " Relative file path
-    endif
 
-    "display a warning if fileformat isnt unix
-    set statusline+=%#warningmsg#
-    set statusline+=%{&ff!='unix'?'['.&ff.']':''}
-    set statusline+=%*
+    function! s:Filename()
+        if g:statusline_fullpath
+            set statusline+=%F\  " Full Path
+        else
+            set statusline+=%f\   " Relative file path
+        endif
+    endfunction
 
-    "display a warning if file encoding isnt utf-8
-    set statusline+=%#warningmsg#
-    set statusline+=%{(&fenc!='utf-8'&&&fenc!='')?'['.&fenc.']':''}
-    set statusline+=%*
-
-    set statusline+=%h      "help file flag
-    set statusline+=%y      "filetype
-    set statusline+=%m      "modified flag
-
-    " display current git branch
-    if g:statusline_fugitive
-        set statusline+=\ %{fugitive#statusline()}
-    endif
-
-    " Display RVM 
-    if g:statusline_rvm
-        set statusline+=\ %{rvm#statusline()}
-    endif
-
-    "display a warning if &et is wrong, or we have mixed-indenting
-    set statusline+=%#error#
-    set statusline+=%{StatuslineTabWarning()}
-    set statusline+=%*
-
-    set statusline+=%{StatuslineTrailingSpaceWarning()}
-
-    if g:statusline_syntastic
+    function! s:CheckUnix()
+        "display a warning if fileformat isnt unix
         set statusline+=%#warningmsg#
-        set statusline+=%{SyntasticStatuslineFlag()}
+        set statusline+=%{&ff!='unix'?'['.&ff.']':''}
         set statusline+=%*
-    endif
+    endfunction
 
-    "display a warning if &paste is set
-    set statusline+=%#error#
-    set statusline+=%{&paste?'[paste]':''}
-    set statusline+=%*
+    function! s:Encoding()
+        "display a warning if file encoding isnt utf-8
+        set statusline+=%#warningmsg#
+        set statusline+=%{(&fenc!='utf-8'&&&fenc!='')?'['.&fenc.']':''}
+        set statusline+=%*
+    endfunction
 
-    "display a warning if &ro is set
-    set statusline+=%#error#
-    set statusline+=%{&ro?'[ro]':''}
-    set statusline+=%*
+    function! s:Help()
+        set statusline+=%h      "help file flag
+    endfunction
 
-    set statusline+=%=      "left/right separator
-    set statusline+=%{StatuslineCurrentHighlight()}\ \ "current highlight
-    set statusline+=%c,     "cursor column
-    set statusline+=%l/%L   "cursor line/total lines
-    set statusline+=\ %P    "percent through file
+    function! s:Filetype()
+        set statusline+=%y      "filetype
+    endfunction
+
+    function! s:Modified()
+        set statusline+=%m      "modified flag
+    endfunction
+
+    function! s:Fugitive()
+        " display current git branch
+        if g:statusline_fugitive
+            set statusline+=\ %{fugitive#statusline()}
+        endif
+    endfunction
+
+    function! s:RVM()
+        " Display RVM
+        if g:statusline_rvm
+            set statusline+=\ %{rvm#statusline()}
+        endif
+    endfunction
+
+    function! s:TabWarning()
+        "display a warning if &et is wrong, or we have mixed-indenting
+        set statusline+=%#error#
+        set statusline+=%{StatuslineTabWarning()}
+        set statusline+=%*
+    endfunction
+
+    function! s:TrailingSpaceWarning()
+        set statusline+=%{StatuslineTrailingSpaceWarning()}
+    endfunction
+
+    function! s:Syntastic()
+        if g:statusline_syntastic
+            set statusline+=%#warningmsg#
+            set statusline+=%{SyntasticStatuslineFlag()}
+            set statusline+=%*
+        endif
+    endfunction
+
+    function! s:Paste()
+        "display a warning if &paste is set
+        set statusline+=%#error#
+        set statusline+=%{&paste?'[paste]':''}
+        set statusline+=%*
+    endfunction
+
+    function! s:ReadOnly()
+        "display a warning if &ro is set
+        set statusline+=%#error#
+        set statusline+=%{&ro?'[ro]':''}
+        set statusline+=%*
+    endfunction
+
+    function! s:RightSeperator()
+        set statusline+=%=      "left/right separator
+    endfunction
+
+    function! s:CurrentHighlight()
+        set statusline+=%{StatuslineCurrentHighlight()}\ \ "current highlight
+    endfunction
+
+    function! s:CursorColumn()
+        set statusline+=%c,     "cursor column
+    endfunction
+
+    function! s:LineAndTotal()
+        set statusline+=%l/%L   "cursor line/total lines
+    endfunction
+
+    function! s:FilePercent()
+        set statusline+=\ %P    "percent through file
+    endfunction
+
     set laststatus=2        " Always show status line
 
     if has("autocmd")
@@ -128,6 +196,9 @@ if g:statusline_enabled && has('statusline')
         autocmd cursorhold,bufwritepost * unlet! b:statusline_tab_warning
     endif
 
+    for i in g:statusline_order
+       call eval('s:' . i . '()')
+    endfor
 endif
 
 "return the syntax highlight group under the cursor ''

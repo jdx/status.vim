@@ -118,6 +118,12 @@ if g:statusline_enabled && has('statusline')
     set statusline+=%l/%L   "cursor line/total lines
     set statusline+=\ %P    "percent through file
     set laststatus=2        " Always show status line
+
+    if has("autocmd")
+        "recalculate the tab warning flag when idle and after writing
+        autocmd cursorhold,bufwritepost * unlet! b:statusline_tab_warning
+    endif
+
 endif
 
 "return the syntax highlight group under the cursor ''

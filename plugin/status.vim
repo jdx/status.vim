@@ -60,7 +60,7 @@ if g:statusline_rvm && !exists('g:loaded_rvm')
     finish
 endif
 
-if g:statusline_enabled
+if g:statusline_enabled && has('statusline')
     " Status bar
     "statusline setup
     set statusline=%f       "tail of the filename

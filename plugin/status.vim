@@ -29,6 +29,7 @@ endfunction
 call s:setVariable("g:statusline_fugitive", "1")
 call s:setVariable("g:statusline_syntastic", "1")
 call s:setVariable("g:statusline_rvm", "1")
+call s:setVariable("g:statusline_fullpath", "0")
 call s:setVariable("g:statusline_enabled", "1")
 
 " FUNCTION: Loads plugin if user has it enabled
@@ -62,8 +63,11 @@ endif
 
 if g:statusline_enabled && has('statusline')
     " Status bar
-    "statusline setup
-    set statusline=%f       "tail of the filename
+    if g:statusline_fullpath
+        set statusline=%F\  " Full Path
+    else
+        set statusline=%f\   " Relative file path
+    endif
 
     "display a warning if fileformat isnt unix
     set statusline+=%#warningmsg#

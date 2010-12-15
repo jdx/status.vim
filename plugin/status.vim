@@ -85,7 +85,7 @@ if g:statusline_enabled && has('statusline')
         set statusline+=\ %{fugitive#statusline()}
     endif
 
-    " Display RVM 
+    " Display RVM
     if g:statusline_rvm
         set statusline+=\ %{rvm#statusline()}
     endif

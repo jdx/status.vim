@@ -106,9 +106,13 @@ if g:statusline_enabled && has('statusline')
         set statusline+=%*
     endif
 
-    "display a warning if &paste or &ro is set
+    "display a warning if &paste is set
     set statusline+=%#error#
     set statusline+=%{&paste?'[paste]':''}
+    set statusline+=%*
+
+    "display a warning if &ro is set
+    set statusline+=%#error#
     set statusline+=%{&ro?'[ro]':''}
     set statusline+=%*
 

@@ -155,7 +155,7 @@ if g:statusline_enabled && has('statusline')
     endfunction
 
     "Function: TabWarning
-    "Desc: Display a warning if &et is wrong, or we have mixed indenting.
+    "Desc: @see StatuslineTabWarning 
     function! s:TabWarning()
         set statusline+=%#error#
         set statusline+=%{StatuslineTabWarning()}
@@ -163,7 +163,7 @@ if g:statusline_enabled && has('statusline')
     endfunction
 
     "Function: TrailingSpaceWarning
-    "Desc: Display [\s] if there are any trailing spaces.
+    "Desc: @see StatuslineTrailingSpaceWarning 
     function! s:TrailingSpaceWarning()
         set statusline+=%{StatuslineTrailingSpaceWarning()}
     endfunction

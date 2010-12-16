@@ -233,7 +233,9 @@ if g:statusline_enabled && has('statusline')
     endif
 
     for i in g:statusline_order
-       call eval('s:' . i . '()')
+        if match(i, '\[a-zA-Z0-9_\]')
+            call eval('s:' . i . '()')
+        endif
     endfor
 endif
 

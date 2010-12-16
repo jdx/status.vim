@@ -85,10 +85,9 @@ if g:statusline_rvm && !exists('g:loaded_rvm')
     call s:setVariable("g:statusline_rvm", "0", 1)
 endif
 
-" Give us something to work with.
-set statusline=
-
 if g:statusline_enabled && has('statusline')
+    " Give us something to work with.
+    set statusline=
 
     "Function: Filename
     "Desc: Returns the filename using the relative path or full path based on
@@ -121,7 +120,7 @@ if g:statusline_enabled && has('statusline')
     "Function: Help
     "Desc: Display the Help file flag
     function! s:Help()
-        set statusline+=%h 
+        set statusline+=%h
     endfunction
 
     "Function: Filetype
@@ -155,7 +154,7 @@ if g:statusline_enabled && has('statusline')
     endfunction
 
     "Function: TabWarning
-    "Desc: @see StatuslineTabWarning 
+    "Desc: @see StatuslineTabWarning
     function! s:TabWarning()
         set statusline+=%#error#
         set statusline+=%{StatuslineTabWarning()}
@@ -163,7 +162,7 @@ if g:statusline_enabled && has('statusline')
     endfunction
 
     "Function: TrailingSpaceWarning
-    "Desc: @see StatuslineTrailingSpaceWarning 
+    "Desc: @see StatuslineTrailingSpaceWarning
     function! s:TrailingSpaceWarning()
         set statusline+=%{StatuslineTrailingSpaceWarning()}
     endfunction
@@ -198,7 +197,7 @@ if g:statusline_enabled && has('statusline')
     "Function: RightSeperator
     "Desc: Everything after this is aligned to the right of the statusline.
     function! s:RightSeperator()
-        set statusline+=%= 
+        set statusline+=%=
     endfunction
 
     "Function: CurrentHighlight
@@ -226,7 +225,7 @@ if g:statusline_enabled && has('statusline')
     endfunction
 
     " Always display the status line.
-    set laststatus=2 
+    set laststatus=2
 
     if has("autocmd")
         "Recalculate the tab warning flag when idle and after writing.
@@ -239,7 +238,7 @@ if g:statusline_enabled && has('statusline')
 endif
 
 "Function: StatuslineCurrentHighlight
-"Desc: Returns the syntax highlight group under the cursor. 
+"Desc: Returns the syntax highlight group under the cursor.
 function! StatuslineCurrentHighlight()
     let name = synIDattr(synID(line('.'),col('.'),1),'name')
     if name == ''

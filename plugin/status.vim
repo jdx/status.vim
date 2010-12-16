@@ -3,7 +3,7 @@
 "Description: Status Line Plugin
 "Maintainer:  Jeff Dickey <dickeytk@gmail.com>
 "Version:     1.0.0
-"Last Change: 09 Dec, 2010
+"Last Change: 15 Dec, 2010
 "============================================================================
 
 " Set Version
@@ -16,7 +16,10 @@ endif
 
 let g:loaded_statusline_plugin = 1
 
-" FUNCTION: Sets User defaults if not defined.
+"Function: s:setVariable
+"Desc: Sets user defaults if not defined.
+"
+"Arguments: var [String], value [Boolean], force [Boolean]
 function! s:setVariable(var, value, force)
     if !exists(a:var) || a:force
         exec 'let ' . a:var . ' = ' . "'" . substitute(a:value, "'", "''", "g") . "'"
@@ -53,7 +56,10 @@ if !exists("g:statusline_order")
         \ 'FilePercent']
 endif
 
-" FUNCTION: Loads plugin if user has it enabled
+"Function: s:loadPlugins
+"Desc: Loads plugin if user has it enabled.
+"
+"Arguments: option_name [String], loaded_var [String], plugin [String]
 function s:loadPlugins(option_name, loaded_var, plugin)
     if a:option_name && !exists(a:loaded_var)
         exec 'runtime ' . a:plugin
@@ -84,6 +90,9 @@ set statusline=
 
 if g:statusline_enabled && has('statusline')
 
+    "Function: Filename
+    "Desc: Returns the filename using the relative path or full path based on
+    "g:statusline_fullpath.
     function! s:Filename()
         if g:statusline_fullpath
             set statusline+=%F\  " Full Path
@@ -92,57 +101,76 @@ if g:statusline_enabled && has('statusline')
         endif
     endfunction
 
+    "Function: CheckUnix
+    "Desc: Display a warning if fileformat isn't unix
+    "TODO: Make more generic or provide dos counterpart.
     function! s:CheckUnix()
-        "display a warning if fileformat isnt unix
         set statusline+=%#warningmsg#
         set statusline+=%{&ff!='unix'?'['.&ff.']':''}
         set statusline+=%*
     endfunction
 
+    "Function: Encoding
+    "Desc: Display a warning if the file encoding isn't utf-8
     function! s:Encoding()
-        "display a warning if file encoding isnt utf-8
         set statusline+=%#warningmsg#
         set statusline+=%{(&fenc!='utf-8'&&&fenc!='')?'['.&fenc.']':''}
         set statusline+=%*
     endfunction
 
+    "Function: Help
+    "Desc: Display the Help file flag
     function! s:Help()
-        set statusline+=%h      "help file flag
+        set statusline+=%h 
     endfunction
 
+    "Function: Filetype
+    "Desc: Display the filetype
     function! s:Filetype()
-        set statusline+=%y      "filetype
+        set statusline+=%y
     endfunction
 
+    "Function: Modified
+    "Desc: Display the modified flag
     function! s:Modified()
-        set statusline+=%m      "modified flag
+        set statusline+=%m
     endfunction
 
+    "Function: Fugitive
+    "Desc: Displays the current git branch if the user has the Fugitive plugin
+    "installed and enabled.
     function! s:Fugitive()
-        " display current git branch
         if g:statusline_fugitive
             set statusline+=\ %{fugitive#statusline()}
         endif
     endfunction
 
+    "Function: RVM
+    "Descc: Displays Ruby version from RVM if the plugin is installed and
+    "enabled.
     function! s:RVM()
-        " Display RVM
         if g:statusline_rvm
             set statusline+=\ %{rvm#statusline()}
         endif
     endfunction
 
+    "Function: TabWarning
+    "Desc: Display a warning if &et is wrong, or we have mixed indenting.
     function! s:TabWarning()
-        "display a warning if &et is wrong, or we have mixed-indenting
         set statusline+=%#error#
         set statusline+=%{StatuslineTabWarning()}
         set statusline+=%*
     endfunction
 
+    "Function: TrailingSpaceWarning
+    "Desc: Display [\s] if there are any trailing spaces.
     function! s:TrailingSpaceWarning()
         set statusline+=%{StatuslineTrailingSpaceWarning()}
     endfunction
 
+    "Function: Syntastic
+    "Desc: Displays code errors and warnings from Syntastic if the plugin is
+    "installed and enabled.
     function! s:Syntastic()
         if g:statusline_syntastic
             set statusline+=%#warningmsg#
@@ -151,44 +179,57 @@ if g:statusline_enabled && has('statusline')
         endif
     endfunction
 
+    "Function: Paste
+    "Desc: Display a warning [paste] if paste is currently enabled.
     function! s:Paste()
-        "display a warning if &paste is set
         set statusline+=%#error#
         set statusline+=%{&paste?'[paste]':''}
         set statusline+=%*
     endfunction
 
+    "Function: ReadOnly
+    "Desc: Display a warning [ro] if &ro is set.
     function! s:ReadOnly()
-        "display a warning if &ro is set
         set statusline+=%#error#
         set statusline+=%{&ro?'[ro]':''}
         set statusline+=%*
     endfunction
 
+    "Function: RightSeperator
+    "Desc: Everything after this is aligned to the right of the statusline.
     function! s:RightSeperator()
-        set statusline+=%=      "left/right separator
+        set statusline+=%= 
     endfunction
 
+    "Function: CurrentHighlight
+    "Desc: @see StatusLineCurrentHighlight
     function! s:CurrentHighlight()
         set statusline+=%{StatuslineCurrentHighlight()}\ \ "current highlight
     endfunction
 
+    "Function: CursorColumn
+    "Desc: Display the cursor column.
     function! s:CursorColumn()
-        set statusline+=%c,     "cursor column
+        set statusline+=%c,
     endfunction
 
+    "Function: LineAndTotal
+    "Desc: Display cursor line/total lines for the current buffer
     function! s:LineAndTotal()
-        set statusline+=%l/%L   "cursor line/total lines
+        set statusline+=%l/%L
     endfunction
 
+    "Function: FilePercent
+    "Desc: Display percentage through file.
     function! s:FilePercent()
-        set statusline+=\ %P    "percent through file
+        set statusline+=\ %P
     endfunction
 
-    set laststatus=2        " Always show status line
+    " Always display the status line.
+    set laststatus=2 
 
     if has("autocmd")
-        "recalculate the tab warning flag when idle and after writing
+        "Recalculate the tab warning flag when idle and after writing.
         autocmd cursorhold,bufwritepost * unlet! b:statusline_tab_warning
     endif
 
@@ -197,7 +238,8 @@ if g:statusline_enabled && has('statusline')
     endfor
 endif
 
-"return the syntax highlight group under the cursor ''
+"Function: StatuslineCurrentHighlight
+"Desc: Returns the syntax highlight group under the cursor. 
 function! StatuslineCurrentHighlight()
     let name = synIDattr(synID(line('.'),col('.'),1),'name')
     if name == ''
@@ -207,11 +249,8 @@ function! StatuslineCurrentHighlight()
     endif
 endfunction
 
-"recalculate the trailing whitespace warning when idle, and after saving
-autocmd cursorhold,bufwritepost * unlet! b:statusline_trailing_space_warning
-
-"return '[\s]' if trailing white space is detected
-"return '' otherwise
+"Function: StatuslineTrailingSpaceWarning
+"Desc: Returns '[\s]' if trailing white space detected
 function! StatuslineTrailingSpaceWarning()
     if !exists("b:statusline_trailing_space_warning")
         if search('\s\+$', 'nw') != 0
@@ -223,9 +262,9 @@ function! StatuslineTrailingSpaceWarning()
     return b:statusline_trailing_space_warning
 endfunction
 
-"return '[&et]' if &et is set wrong
-"return '[mixed-indenting]' if spaces and tabs are used to indent
-"return an empty string if everything is fine
+"Function: StatuslineTabWarning
+"Desc: Returns '[&et]' if &et is set wrong
+"      Returns '[mixed-indenting]' if spaces and tabs are used to indent
 function! StatuslineTabWarning()
     if !exists("b:statusline_tab_warning")
         let tabs = search('^\t', 'nw') != 0
@@ -242,7 +281,8 @@ function! StatuslineTabWarning()
     return b:statusline_tab_warning
 endfunction
 
-"return a warning for "long lines" where "long" is either &textwidth or 80 (if
+"Function: StatuslineLongLineWarning
+"Desc: Return a warning for "long lines" where "long" is either &textwidth or 80 (if
 "no &textwidth is set)
 "
 "return '' if no long lines
@@ -265,7 +305,8 @@ function! StatuslineLongLineWarning()
     return b:statusline_long_line_warning
 endfunction
 
-"return a list containing the lengths of the long lines in this buffer
+"Function: LongLines
+"Desc: Return a list containing the lengths of the long lines in this buffer
 function! s:LongLines()
     let threshold = (&tw ? &tw : 80)
     let spaces = repeat(" ", &ts)
@@ -284,7 +325,10 @@ function! s:LongLines()
     return long_line_lens
 endfunction
 
-"find the median of the given array of numbers
+"Function: Median
+"Desc: Find the median of the given array of numbers
+"
+"Arguments: nums [Integer]
 function! s:Median(nums)
     let nums = sort(a:nums)
     let l = len(nums)

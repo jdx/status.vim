@@ -6,7 +6,7 @@
 "Last Change: 15 Dec, 2010
 "============================================================================
 
-" Set Version
+" Set Version {{{1
 let s:statusline_plugin = '1.0.0'
 
 " If already loaded do not load again.
@@ -16,7 +16,7 @@ endif
 
 let g:loaded_statusline_plugin = 1
 
-"Function: s:setVariable
+"Function: s:setVariable {{{1
 "Desc: Sets user defaults if not defined.
 "
 "Arguments: var [String], value [Boolean], force [Boolean]
@@ -28,7 +28,7 @@ function! s:setVariable(var, value, force)
     return 0
 endfunction
 
-" Set User defaults if unset.
+" Set User defaults if unset. {{{1
 call s:setVariable("g:statusline_fugitive", "1", 0)
 call s:setVariable("g:statusline_syntastic", "1", 0)
 call s:setVariable("g:statusline_rvm", "1", 0)
@@ -56,7 +56,7 @@ if !exists("g:statusline_order")
         \ 'FilePercent']
 endif
 
-"Function: s:loadPlugins
+"Function: s:loadPlugins {{{1
 "Desc: Loads plugin if user has it enabled.
 "
 "Arguments: option_name [String], loaded_var [String], plugin [String]
@@ -68,7 +68,7 @@ function s:loadPlugins(option_name, loaded_var, plugin)
     return 0
 endfunction
 
-" Load required plugins if user wants them.
+" Load required plugins if user wants them. {{{2
 call s:loadPlugins(g:statusline_fugitive, "g:loaded_fugitive", "plugin/fugitive.vim")
 call s:loadPlugins(g:statusline_syntastic, "g:loaded_syntastic_plugin", "plugin/syntastic.vim")
 call s:loadPlugins(g:statusline_rvm, "g:loaded_rvm", "plugin/rvm.vim")
@@ -85,11 +85,12 @@ if g:statusline_rvm && !exists('g:loaded_rvm')
     call s:setVariable("g:statusline_rvm", "0", 1)
 endif
 
+" Setup status line if we have +statusline and the plugin is enabled. {{{1
 if g:statusline_enabled && has('statusline')
     " Give us something to work with.
     set statusline=
 
-    "Function: Filename
+    "Function: Filename {{{2
     "Desc: Returns the filename using the relative path or full path based on
     "g:statusline_fullpath.
     function! s:Filename()
@@ -100,7 +101,7 @@ if g:statusline_enabled && has('statusline')
         endif
     endfunction
 
-    "Function: CheckUnix
+    "Function: CheckUnix {{{2
     "Desc: Display a warning if fileformat isn't unix
     "TODO: Make more generic or provide dos counterpart.
     function! s:CheckUnix()
@@ -109,7 +110,7 @@ if g:statusline_enabled && has('statusline')
         set statusline+=%*
     endfunction
 
-    "Function: Encoding
+    "Function: Encoding {{{2
     "Desc: Display a warning if the file encoding isn't utf-8
     function! s:Encoding()
         set statusline+=%#warningmsg#
@@ -117,25 +118,25 @@ if g:statusline_enabled && has('statusline')
         set statusline+=%*
     endfunction
 
-    "Function: Help
+    "Function: Help {{{2
     "Desc: Display the Help file flag
     function! s:Help()
         set statusline+=%h
     endfunction
 
-    "Function: Filetype
+    "Function: Filetype {{{2
     "Desc: Display the filetype
     function! s:Filetype()
         set statusline+=%y
     endfunction
 
-    "Function: Modified
+    "Function: Modified {{{2
     "Desc: Display the modified flag
     function! s:Modified()
         set statusline+=%m
     endfunction
 
-    "Function: Fugitive
+    "Function: Fugitive {{{2
     "Desc: Displays the current git branch if the user has the Fugitive plugin
     "installed and enabled.
     function! s:Fugitive()
@@ -144,7 +145,7 @@ if g:statusline_enabled && has('statusline')
         endif
     endfunction
 
-    "Function: RVM
+    "Function: RVM {{{2
     "Descc: Displays Ruby version from RVM if the plugin is installed and
     "enabled.
     function! s:RVM()
@@ -153,7 +154,7 @@ if g:statusline_enabled && has('statusline')
         endif
     endfunction
 
-    "Function: TabWarning
+    "Function: TabWarning {{{2
     "Desc: @see StatuslineTabWarning
     function! s:TabWarning()
         set statusline+=%#error#
@@ -161,13 +162,13 @@ if g:statusline_enabled && has('statusline')
         set statusline+=%*
     endfunction
 
-    "Function: TrailingSpaceWarning
+    "Function: TrailingSpaceWarning {{{2
     "Desc: @see StatuslineTrailingSpaceWarning
     function! s:TrailingSpaceWarning()
         set statusline+=%{StatuslineTrailingSpaceWarning()}
     endfunction
 
-    "Function: Syntastic
+    "Function: Syntastic {{{2
     "Desc: Displays code errors and warnings from Syntastic if the plugin is
     "installed and enabled.
     function! s:Syntastic()
@@ -178,7 +179,7 @@ if g:statusline_enabled && has('statusline')
         endif
     endfunction
 
-    "Function: Paste
+    "Function: Paste {{{2
     "Desc: Display a warning [paste] if paste is currently enabled.
     function! s:Paste()
         set statusline+=%#error#
@@ -186,7 +187,7 @@ if g:statusline_enabled && has('statusline')
         set statusline+=%*
     endfunction
 
-    "Function: ReadOnly
+    "Function: ReadOnly {{{2
     "Desc: Display a warning [ro] if &ro is set.
     function! s:ReadOnly()
         set statusline+=%#error#
@@ -194,37 +195,37 @@ if g:statusline_enabled && has('statusline')
         set statusline+=%*
     endfunction
 
-    "Function: RightSeperator
+    "Function: RightSeperator {{{2
     "Desc: Everything after this is aligned to the right of the statusline.
     function! s:RightSeperator()
         set statusline+=%=
     endfunction
 
-    "Function: CurrentHighlight
+    "Function: CurrentHighlight {{{2
     "Desc: @see StatusLineCurrentHighlight
     function! s:CurrentHighlight()
         set statusline+=%{StatuslineCurrentHighlight()}\ \ "current highlight
     endfunction
 
-    "Function: CursorColumn
+    "Function: CursorColumn {{{2
     "Desc: Display the cursor column.
     function! s:CursorColumn()
         set statusline+=%c,
     endfunction
 
-    "Function: LineAndTotal
+    "Function: LineAndTotal {{{2
     "Desc: Display cursor line/total lines for the current buffer
     function! s:LineAndTotal()
         set statusline+=%l/%L
     endfunction
 
-    "Function: FilePercent
+    "Function: FilePercent {{{2
     "Desc: Display percentage through file.
     function! s:FilePercent()
         set statusline+=\ %P
     endfunction
 
-    " Always display the status line.
+    " Always display the status line. 
     set laststatus=2
 
     if has("autocmd")
@@ -239,7 +240,7 @@ if g:statusline_enabled && has('statusline')
     endfor
 endif
 
-"Function: StatuslineCurrentHighlight
+"Function: StatuslineCurrentHighlight {{{1
 "Desc: Returns the syntax highlight group under the cursor.
 function! StatuslineCurrentHighlight()
     let name = synIDattr(synID(line('.'),col('.'),1),'name')
@@ -250,7 +251,7 @@ function! StatuslineCurrentHighlight()
     endif
 endfunction
 
-"Function: StatuslineTrailingSpaceWarning
+"Function: StatuslineTrailingSpaceWarning {{{1
 "Desc: Returns '[\s]' if trailing white space detected
 function! StatuslineTrailingSpaceWarning()
     if !exists("b:statusline_trailing_space_warning")
@@ -263,7 +264,7 @@ function! StatuslineTrailingSpaceWarning()
     return b:statusline_trailing_space_warning
 endfunction
 
-"Function: StatuslineTabWarning
+"Function: StatuslineTabWarning {{{1
 "Desc: Returns '[&et]' if &et is set wrong
 "      Returns '[mixed-indenting]' if spaces and tabs are used to indent
 function! StatuslineTabWarning()
@@ -282,7 +283,7 @@ function! StatuslineTabWarning()
     return b:statusline_tab_warning
 endfunction
 
-"Function: StatuslineLongLineWarning
+"Function: StatuslineLongLineWarning {{{1
 "Desc: Return a warning for "long lines" where "long" is either &textwidth or 80 (if
 "no &textwidth is set)
 "
@@ -306,7 +307,7 @@ function! StatuslineLongLineWarning()
     return b:statusline_long_line_warning
 endfunction
 
-"Function: LongLines
+"Function: LongLines {{{1
 "Desc: Return a list containing the lengths of the long lines in this buffer
 function! s:LongLines()
     let threshold = (&tw ? &tw : 80)
@@ -326,7 +327,7 @@ function! s:LongLines()
     return long_line_lens
 endfunction
 
-"Function: Median
+"Function: Median {{{1
 "Desc: Find the median of the given array of numbers
 "
 "Arguments: nums [Integer]

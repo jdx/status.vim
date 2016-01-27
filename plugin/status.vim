@@ -1,7 +1,7 @@
 "============================================================================
 "File:        statusline.vim
 "Description: Status Line Plugin
-"Maintainer:  Jeff Dickey <dickeytk@gmail.com>
+"Maintainer:  Jeff Dickey <@dickeyxxx>
 "Version:     1.0.0
 "Last Change: 15 Dec, 2010
 "============================================================================
